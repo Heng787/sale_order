@@ -3,8 +3,9 @@ import { ref, computed, watch } from "vue";
 
 const filteredProducts = ref([]);
 const searchProduct = (event) => {
+  const query = event.query || '';
   filteredProducts.value = props.brand?.products?.map(p => p.name).filter((name) => {
-    return name.toLowerCase().includes(event.query.toLowerCase());
+    return name.toLowerCase().includes(query.toLowerCase());
   }) || [];
 };
 
@@ -28,6 +29,9 @@ const onItemChange = (row) => {
   if (product) {
     row.uom = product.uom;
     row.price = product.price;
+    if (!row.qty || row.qty === 0 || row.qty === "") {
+      row.qty = 1;
+    }
   }
 };
 
@@ -92,6 +96,7 @@ watch(
                 @item-select="onItemChange(row)"
                 @change="onItemChange(row)"
                 placeholder="Search or type…"
+                dropdown
                 fluid
               />
             </td>
